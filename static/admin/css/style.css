@@ -1,0 +1,221 @@
+*{
+    margin:0; padding: 0; box-sizing: border-box;
+
+}
+h2{
+    font-size: 20px;
+    color: darkgray;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    text-align: center;
+}
+body{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
+    background-color: #cdcdcd;
+}
+
+.callSection{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.div-center{
+    width: 90%;
+    margin: 2rem auto;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.container-father{
+    width: 98%;
+    margin-inline: auto;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.filters{
+    min-width: 95%;
+    height: 3rem;
+    margin: 1rem auto;
+    padding: 5px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    background-color: rgb(74, 87, 74);
+}
+.filters label select{
+    margin-left: 5px;
+    width: 60%;
+    height: 2rem;
+}
+.filters label{
+    width: 50%;
+    height: 2rem;
+    margin-left: 0;
+    font-size: 16px;
+    color: #fff;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn{
+    width: 100%;
+    height: 2rem;
+    margin-inline: auto;
+    margin-top: 5px;
+
+    background-color: rgb(74, 87, 74);
+    color: #fff;
+    border: none;
+    /* border-radius: 3px; */
+}
+
+button:hover{
+    cursor: pointer;
+    background-color: rgb(0, 85, 0);
+}
+
+#leaderName{
+    width: 70%;
+}
+
+table{
+    width: 95%;
+    height: 25rem;
+    margin-inline: auto;
+
+    font-size: 13px;
+
+}
+
+.div-overFlow-y{
+    max-height: 16rem;
+    padding: 0px 5px 5px 5px;
+    overflow-y: auto;
+}
+
+.div-overFlow-y::-webkit-scrollbar {
+    width: 0px;
+  }
+
+thead{
+    background-color: rgb(74, 87, 74);
+    color: #fff;
+
+    font-size: 14px;
+
+    position: sticky;
+    top: 0;
+}
+
+table td{
+    height: 2rem;
+    padding: 2px;
+    border: 1px solid rgb(57, 94, 57);
+}
+tr{
+    height: 2rem;
+}
+
+tbody tr:hover{
+    background-color: #ffffff;
+}
+
+table td:nth-child(1){
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+table td:nth-child(1):hover{
+    max-width: 300px;
+    overflow: auto;
+    text-overflow: ellipsis;
+    white-space: initial;
+}
+
+table td:nth-child(5){
+    height: 3rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.justificativa{
+    width: 70%;
+    height: 1.7rem;
+    border: 1px solid rgb(110, 110, 110);
+    border-radius: 6px;
+
+    margin-inline: auto;
+
+    background-color: rgb(57, 94, 57);
+    color: #fff;
+}
+
+.justificativa:hover{
+    background-color: rgb(6, 132, 6);
+
+    cursor: pointer;
+}
+
+.status-circle{
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    /* margin-left: -31px; */
+}
+
+.reportProblem:hover{
+    cursor: pointer;
+}
+
+.reportProblem path:hover{
+    fill:#fff200;
+}
+
+
+
+
+.rotate{
+    width: 25px;
+    height: 25px;
+    background-color: transparent;
+    border: 2px solid #fff;
+    border-top: 2px solid #898989;
+    border-radius: 50%;
+
+    margin-inline: auto;
+
+    animation: girar 2s infinite linear;
+}
+@keyframes girar{
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+@media screen and (max-width: 630px){
+    /* .justificativa option:default{
+        color: transparent;
+    } */
+}

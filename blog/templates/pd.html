@@ -1,0 +1,45 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pd</title>
+</head>
+<body>
+    <div class="container-father">
+        <div class="filters">
+            <label>
+                CAD:
+                <select onchange="getLeadersList()">
+                    <option disabled selected>CAD</option>
+                    <option>BRSP02</option>
+                    <option>BRSP04</option>
+                    <option>BRSP05</option>
+                </select>
+            </label>
+            <label>
+                Team Leader:
+                <select id="leaderName" onchange="callGenarate()">
+                </select>
+            </label>
+        </div>
+        <div id="call-list" class="div-overFlow-y">
+            <table id="data-table">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Id Groot</th>
+                        <th>Escala</th>
+                        <th>Status</th>
+                        <th>Justificativa</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+    <button type="button" id="btnSave" class="btn" onclick="saveAnswres()">Save</button>
+</body>
+</html>
