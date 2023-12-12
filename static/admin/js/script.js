@@ -1,37 +1,11 @@
-// function carregarSvg(pageName) {
-//     var container = document.querySelector(".logo");
-
-//     var xhr = new XMLHttpRequest();
-//     xhr.onreadystatechange = function() {
-//         if (this.readyState == 4 && this.status == 200) {
-//             container.innerHTML = this.responseText;
-//         }
-//     };
-//     xhr.open("GET", `${pageName}.html`, true);
-//     xhr.send();
-// }
-
 function carregarConteudo() {
-    // var container = document.getElementById("container");
-
-    // var xhr = new XMLHttpRequest();
-    // xhr.onreadystatechange = function() {
-    //     if (this.readyState == 4 && this.status == 200) {
-    //         container.innerHTML = this.responseText;
-    //     }
-    // };
-    // xhr.open("GET", `${pageName}.html`, true);
-    // xhr.send();
 
     console.log('carrearConteudo')
 
     const callSection = document.querySelector('.callSection')
     callSection.style.display = 'block'
 
-    // console.log(hcList);
 }
-
-// window.onload = carregarSvg('../blog/templates/admin/html/svg');
 
 function getLeadersList(){
     const selectedLeader = document.getElementById('leaderName');
@@ -238,28 +212,51 @@ function geraOptions(cargo, statusRow){
 };
 
 function saveAnswres(){
-    console.log('saved!')
-    const btn = document.getElementById('btnSave')
-    let dataAnswer = [];
-    var pending = false;
+    // console.log('saved!')
+    // const btn = document.getElementById('btnSave')
+    // let dataAnswer = [];
+    // var pending = false;
 
-    const rows = document.querySelectorAll('#data-table tbody tr');
-    rows.forEach((row)=>{
-        var name = row.querySelector('td:nth-child(1)').textContent;
-        var idGroot = row.querySelector('td:nth-child(2)').textContent;
-        var answer = row.querySelector('.justificativa').value;
+    // const rows = document.querySelectorAll('#data-table tbody tr');
+    // rows.forEach((row)=>{
+    //     var name = row.querySelector('td:nth-child(1)').textContent;
+    //     var idGroot = row.querySelector('td:nth-child(2)').textContent;
+    //     var answer = row.querySelector('.justificativa').value;
         
-        dataAnswer.push([name, idGroot, answer]);
+    //     dataAnswer.push([name, idGroot, answer]);
 
-        if(answer === 'pendente'){
-            pending = true   
-        };
-    });
+    //     if(answer === 'pendente'){
+    //         pending = true   
+    //     };
+    // });
 
-    if(pending){
-        alert('Justificativas pendente!');
-        return
-    };
+    // if(pending){
+    //     alert('Justificativas pendente!');
+    //     return
+    // };
+
+    const dados = {
+        nome: 'Nome do usuário',
+        id_groot: 123,
+        status: 'Ativo',
+        categoria_status: 'Categoria A'
+    }
+
+    const csrftoken = getCookie('csrftoken');
+
+    fetch('/salvar_dados/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken,
+        },
+        body: JSON.stringify(dados),
+    })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.error('Erro', error));
+
+    
 
     btn.innerHTML = `<div class="rotate"></div>`;
 
@@ -267,4 +264,28 @@ function saveAnswres(){
         console.log(dataAnswer);
         btn.innerHTML = `confirmed!`;
     },5000);
+}
+
+
+function enviarDados(){
+    const dados = {
+        nome: 'Nome do usuário',
+        id_groot: 123,
+        status: 'Ativo',
+        categoria_status: 'Categoria A'
+    }
+
+    const csrftoken = getCookie('csrftoken');
+
+    fetch('/salvar_dados/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken,
+        },
+        body: JSON.stringify(dados),
+    })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.error('Erro', error));
 }

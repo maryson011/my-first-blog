@@ -63,6 +63,7 @@
     </svg>  -->
 
     <!-- <div id="container" class="div-center" onmouseover="mouseOut()"></div> -->
+<!--     
     <section class="callSection" style="display: none">
         <div class="container-father">
             <div class="filters">
@@ -97,8 +98,28 @@
             </div>
         </div>
         <button type="button" id="btnSave" class="btn" onclick="saveAnswres()">Save</button>
+    </section> -->
+    <!-- <button onclick="enviarDados()">Enviar Dados</button> -->
+    <section class="callSection" style="display: none">
+        <form method="post" action="{% url 'salvar_dados' %}">
+            {% csrf_token %}
+            <label for="nome">Nome:</label>
+            <input type="text" name="nome" required>
+        
+            <label for="id_groot">ID Groot:</label>
+            <input type="text" name="id_groot" required>
+        
+            <label for="status">Status:</label>
+            <input type="text" name="status" required>
+        
+            <label for="categoria_status">Categoria de Status:</label>
+            <input type="text" name="categoria_status" required>
+        
+            <button type="submit">Salvar</button>
+        </form>
     </section>
 
+    
     <div id="customPrompt" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -112,5 +133,6 @@
     <script src="{% static 'admin/js/data.js' %}"></script>
     <script src="{% static 'admin/js/menu.js' %}"></script>
     <script src="{% static 'admin/js/script.js' %}"></script>
+    
 </body>
 </html>

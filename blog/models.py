@@ -1,10 +1,6 @@
 from django.db import models
 from django.utils import timezone
 
-# Create your models here.
-# class auth(models.Model):
-#     User = models.TextField()
-
 class Post(models.Model):
     # author = models.ForeignKey('auth.User')
     author = models.TextField()
@@ -23,3 +19,9 @@ class Post(models.Model):
     
     def __str__(self):
         return self.title
+    
+class Dados(models.Model):
+    nome = models.CharField(max_length=255)
+    id_groot = models.IntegerField()
+    status = models.CharField(max_length=100)
+    categoria_status = models.CharField(max_length=100)
