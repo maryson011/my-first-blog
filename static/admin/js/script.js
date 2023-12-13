@@ -211,81 +211,67 @@ function geraOptions(cargo, statusRow){
     return values;
 };
 
-function saveAnswres(){
-    // console.log('saved!')
-    // const btn = document.getElementById('btnSave')
-    // let dataAnswer = [];
-    // var pending = false;
 
-    // const rows = document.querySelectorAll('#data-table tbody tr');
-    // rows.forEach((row)=>{
-    //     var name = row.querySelector('td:nth-child(1)').textContent;
-    //     var idGroot = row.querySelector('td:nth-child(2)').textContent;
-    //     var answer = row.querySelector('.justificativa').value;
+function saveAnswers() {
+
+    console.log('saved!')
+    const btn = document.getElementById('btnSave')
+    let dataAnswer = [];
+    var pending = false;
+
+    const rows = document.querySelectorAll('#data-table tbody tr');
+    rows.forEach((row)=>{
+        var name = row.querySelector('td:nth-child(1)').textContent;
+        var idGroot = row.querySelector('td:nth-child(2)').textContent;
+        var answer = row.querySelector('.justificativa').value;
         
-    //     dataAnswer.push([name, idGroot, answer]);
+        dataAnswer.push([name, idGroot, answer]);
 
-    //     if(answer === 'pendente'){
-    //         pending = true   
-    //     };
-    // });
+        if(answer === 'pendente'){
+            pending = true   
+        };
+    });
 
-    // if(pending){
-    //     alert('Justificativas pendente!');
-    //     return
-    // };
-
-    const dados = {
-        nome: 'Nome do usuário',
-        id_groot: 123,
-        status: 'Ativo',
-        categoria_status: 'Categoria A'
-    }
-
-    const csrftoken = getCookie('csrftoken');
-
-    fetch('/salvar_dados/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrftoken,
-        },
-        body: JSON.stringify(dados),
-    })
-    .then(response => response.json())
-    .then(data => console.log(data))
-    .catch(error => console.error('Erro', error));
-
-    
+    if(pending){
+        alert('Justificativas pendente!');
+        return
+    };
 
     btn.innerHTML = `<div class="rotate"></div>`;
 
-    setTimeout(()=>{
-        console.log(dataAnswer);
-        btn.innerHTML = `confirmed!`;
-    },5000);
-}
-
-
-function enviarDados(){
-    const dados = {
-        nome: 'Nome do usuário',
-        id_groot: 123,
-        status: 'Ativo',
-        categoria_status: 'Categoria A'
-    }
-
-    const csrftoken = getCookie('csrftoken');
-
-    fetch('/salvar_dados/', {
+    fetch(btn.getAttribute('data-url'), {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': csrftoken,
+            'X-CSRFToken': getCookie('csrftoken'),
         },
-        body: JSON.stringify(dados),
+        body: JSON.stringify({ dataAnswer }),
     })
-    .then(response => response.json())
-    .then(data => console.log(data))
-    .catch(error => console.error('Erro', error));
+        .then(response => response.json())
+        .then(data => {
+            console.log('Sucesso:', data);
+            btn.innerHTML = 'Confirmed!';
+        })
+        .catch((error) => {
+            console.error('Erro:', error);
+            btn.innerHTML = 'Error!';
+        });
+
+}
+
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Verifica se o cookie inicia com o nome desejado
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }

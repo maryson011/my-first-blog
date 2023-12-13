@@ -35,25 +35,30 @@ class MainView(View):
 from django.shortcuts import render, redirect
 from .models import Dados
 
+@csrf_exempt  # Apenas para simplificar, geralmente use uma proteção CSRF apropriada
 def salvar_dados(request):
     if request.method == 'POST':
-        # Obter dados do formulário
-        nome = request.POST.get('nome')
-        id_groot = request.POST.get('id_groot')
-        status = request.POST.get('status')
-        categoria_status = request.POST.get('categoria_status')
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            data_answer = data.get('dataAnswer', [])
 
-        # Salvar no banco de dados
-        Dados.objects.create(
-            nome=nome,
-            id_groot=id_groot,
-            status=status,
-            categoria_status=categoria_status
-        )
+            for item in data_answer:
+                nome = item[0]
+                id_groot = item[1]
+                answer = item[2]
 
-        return render(request, 'main.html') # Redirecionar para uma página de sucesso ou outra view
-    else:
-        return render(request, 'main.html')  # Renderizar o formulário HTML
+                Dados.objects.create(
+                    nome=nome,
+                    id_groot=id_groot,
+                    status=answer,
+                    categoria_status=''  # Adicione o valor apropriado aqui
+                )
+
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+
+    return JsonResponse({'success': False, 'message': 'Método de requisição incorreto'})
 
 
 # from .views import SucessoView

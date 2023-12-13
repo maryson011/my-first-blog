@@ -57,19 +57,13 @@
             </div>
         </nav>
     </header>
-
-    <!-- <svg mode="prod" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 40 40">
-        <path fill-rule="evenodd" d="M20 0c11.046 0 20 8.954 20 20s-8.954 20-20 20S0 31.046 0 20 8.954 0 20 0zm0 1.5C9.783 1.5 1.5 9.783 1.5 20S9.783 38.5 20 38.5 38.5 30.217 38.5 20 30.217 1.5 20 1.5zm-6.75 22.75H26l.001.072c1.71.34 2.999 1.849 2.999 3.658v.75h-1.5v-.75c0-1.231-.999-2.23-2.23-2.23H13.98c-1.178 0-2.143.914-2.224 2.071l-.006.16v.75h-1.5v-.75c0-1.81 1.29-3.32 3-3.66v-.071zm6.749-15.002c3.728 0 6.751 3.023 6.751 6.751s-3.023 6.751-6.751 6.751-6.751-3.023-6.751-6.751 3.023-6.751 6.751-6.751zm0 1.5c-2.9 0-5.251 2.351-5.251 5.251 0 2.9 2.351 5.251 5.251 5.251 2.9 0 5.251-2.351 5.251-5.251 0-2.9-2.351-5.251-5.251-5.251z"></path>
-    </svg>  -->
-
-    <!-- <div id="container" class="div-center" onmouseover="mouseOut()"></div> -->
-<!--     
+    
     <section class="callSection" style="display: none">
         <div class="container-father">
             <div class="filters">
                 <label>
                     CAD:
-                    <select onchange="getLeadersList()">
+                    <select id="cadDropdown" onchange="getLeadersList()">
                         <option disabled selected>CAD</option>
                         <option>BRSP02</option>
                         <option>BRSP04</option>
@@ -97,29 +91,10 @@
                 </table>
             </div>
         </div>
-        <button type="button" id="btnSave" class="btn" onclick="saveAnswres()">Save</button>
-    </section> -->
-    <!-- <button onclick="enviarDados()">Enviar Dados</button> -->
-    <section class="callSection" style="display: none">
-        <form method="post" action="{% url 'salvar_dados' %}">
-            {% csrf_token %}
-            <label for="nome">Nome:</label>
-            <input type="text" name="nome" required>
-        
-            <label for="id_groot">ID Groot:</label>
-            <input type="text" name="id_groot" required>
-        
-            <label for="status">Status:</label>
-            <input type="text" name="status" required>
-        
-            <label for="categoria_status">Categoria de Status:</label>
-            <input type="text" name="categoria_status" required>
-        
-            <button type="submit">Salvar</button>
-        </form>
+        <button type="button" id="btnSave" class="btn" data-url="{% url 'salvar_dados' %}" onclick="saveAnswers()">Salvar</button>
     </section>
 
-    
+
     <div id="customPrompt" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
