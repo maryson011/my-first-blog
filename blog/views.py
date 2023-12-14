@@ -70,15 +70,16 @@ def salvar_report(request):
             props = data.get('props', [])
 
             for item in props:
-                id_Groot = item[0]
-                status = item[1]
-                report = item[2]
+                if item[0] != '':
+                    id_Groot = item[0]
+                    status = item[1]
+                    report = item[2]
 
-                ReportData.objects.create(
-                    id_Groot=id_Groot,
-                    status=status,
-                    description=report
-                )
+                    ReportData.objects.create(
+                        id_Groot=id_Groot,
+                        status=status,
+                        description=report
+                    )
             return JsonResponse({'success': True})
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)})

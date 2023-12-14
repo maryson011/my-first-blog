@@ -90,8 +90,8 @@ async function callGenarate(){
         report.classList.add('reportProblem');
 
         report.addEventListener('click', function(event){
-            let row = event.target.closest('tr');
-            let name = row.children[0].textContent;
+            var row = event.target.closest('tr');
+            var name = row.children[0].textContent;
             var idGroot = parseFloat(row.children[1].textContent);
             var status = row.children[3].textContent;
             
@@ -107,70 +107,8 @@ async function callGenarate(){
             customPrompt.style.display = 'block';
             
             dataReport.innerHTML = `
-            <p>${idGroot}</p> - <p>${name.slice(0, 20)}...</p> - <p>${status}</p>
+            <p id="idgrootReport">${idGroot}</p> - <p id="nameReport">${name.slice(0, 20)}...</p> - <p id="statusReport">${status}</p>
             `
-
-            var props = []
-            console.log('props criado')
-            console.log(props)
-            
-            props = props.filter((r)=>{
-                return r[0] === ''
-            });
-
-            console.log('props após filter')
-            console.log(props)
-            
-            console.log(`${props} - filter`)
-            
-            submitButton.addEventListener('click', function() {
-                let descriptionInput = document.getElementById('occurrenceDescription');
-                let description = descriptionInput.value;
-                // props.push(description);
-                props = [
-                    [idGroot, status, description]
-                ]
-
-                console.log('valores atibuidos a props')
-                console.log(props)
-                // document.getElementById('occurrenceDescription').value = '';
-                
-                submitButton.innerHTML = `
-                    <div class="rotate"></div>
-                `
-                const btnReport = document.getElementById('submitDescription')
-
-                fetch(btnReport.getAttribute('data-url'), {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': getCookie('csrftoken'),
-                    },
-                    body: JSON.stringify({ props }),
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Sucesso:', data);
-                        btnReport.innerHTML = 'Confirmed!';
-                        console.log('ultimo props');
-                        console.log(props);
-                        // console.log('limpando props...');
-                        // props = [];
-                    })
-                    .catch((error) => {
-                        console.error('Erro:', error);
-                        btnReport.innerHTML = 'Error!';
-                    });
-
-                setTimeout(()=>{
-                    submitButton.innerHTML = `
-                        Enviar
-                    `
-
-                    console.log(props)
-                    customPrompt.style.display = 'none';
-                }, 5000);
-            });
 
             closeButton.addEventListener('click', function() {
                 customPrompt.style.display = 'none';
@@ -196,6 +134,123 @@ async function callGenarate(){
 };
 
 // quando estiver conectado com DB essa função deve buscar primeiro a base e verificar se já existe resposta
+// 
+// submitButton.addEventListener('click', function() {
+//     let descriptionInput = document.getElementById('occurrenceDescription');
+//     let description = descriptionInput.value;
+
+//     var props = []
+//     console.log('props criado')
+//     console.log(props)
+    
+//     props = props.filter((r)=>{
+//         return r[0] === ''
+//     });
+
+//     console.log('props após filter')
+//     console.log(props)
+    
+//     console.log(`${props} - filter`)
+//     // props.push(description);
+//     props = [
+//         [idGroot, status, description]
+//     ]
+
+//     console.log('valores atibuidos a props')
+//     console.log(props)
+//     // document.getElementById('occurrenceDescription').value = '';
+    
+//     submitButton.innerHTML = `
+//         <div class="rotate"></div>
+//     `
+//     const btnReport = document.getElementById('submitDescription')
+
+//     fetch(btnReport.getAttribute('data-url'), {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//             'X-CSRFToken': getCookie('csrftoken'),
+//         },
+//         body: JSON.stringify({ props }),
+//     })
+//         .then(response => response.json())
+//         .then(data => {
+//             console.log('Sucesso:', data);
+//             btnReport.innerHTML = 'Confirmed!';
+//             console.log('ultimo props');
+//             console.log(props);
+
+//             name = '';
+//             idGroot = '';
+//             status = '';
+//             document.getElementById('occurrenceDescription').value = '';
+//             // console.log('limpando props...');
+//             // props = [];
+//         })
+//         .catch((error) => {
+//             console.error('Erro:', error);
+//             btnReport.innerHTML = 'Error!';
+//         });
+
+//     setTimeout(()=>{
+//         submitButton.innerHTML = `
+//             Enviar
+//         `
+
+//         console.log(props)
+//         customPrompt.style.display = 'none';
+//     }, 5000);
+// });
+// 
+function getReport(){
+    const dataReport = document.querySelector('.dataReport');
+    let descriptionInput = document.getElementById('occurrenceDescription').value;
+    let idGroot = document.getElementById('idgrootReport').textContent;
+    let status = document.getElementById('statusReport').textContent;
+
+    const props = [
+        [idGroot, status, descriptionInput]
+    ]
+
+    document.getElementById('occurrenceDescription').value = '';
+    let btnReport = document.getElementById('submitDescription')
+
+    fetch(btnReport.getAttribute('data-url'), {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: JSON.stringify({ props }),
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Sucesso:', data);
+            btnReport.innerHTML = 'Confirmed!';
+            console.log('ultimo props');
+            console.log(props);
+
+            idGroot = '';
+            status = '';
+            document.getElementById('occurrenceDescription').value = '';
+            // console.log('limpando props...');
+            // props = [];
+        })
+        .catch((error) => {
+            console.error('Erro:', error);
+            btnReport.innerHTML = 'Error!';
+        });
+
+    setTimeout(()=>{
+        btnReport.innerHTML = `
+            Enviar
+        `
+
+        console.log(props)
+        customPrompt.style.display = 'none';
+    }, 5000);
+}
+
 
 function geraOptionsDefault(cargo, statusRow){
     var option = document.createElement('option');
