@@ -25,3 +25,10 @@ class Dados(models.Model):
     id_groot = models.IntegerField()
     status = models.CharField(max_length=100)
     categoria_status = models.CharField(max_length=100)
+    lauch_date = models.DateTimeField(default=timezone.now, editable=False)
+
+class ReportData(models.Model):
+    id_Groot = models.IntegerField()
+    status = models.CharField(max_length=100)
+    description = models.CharField(max_length=500)
+    lauch_date = models.DateTimeField(default=timezone.now, editable=False)

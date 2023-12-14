@@ -4,7 +4,6 @@ from django.views import View
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-from .models import Dados
 import json
 
 
@@ -34,6 +33,7 @@ class MainView(View):
 
 from django.shortcuts import render, redirect
 from .models import Dados
+from .models import ReportData
 
 @csrf_exempt  # Apenas para simplificar, geralmente use uma proteção CSRF apropriada
 def salvar_dados(request):
@@ -46,12 +46,13 @@ def salvar_dados(request):
                 nome = item[0]
                 id_groot = item[1]
                 answer = item[2]
+                categoria_status = item[3]
 
                 Dados.objects.create(
                     nome=nome,
                     id_groot=id_groot,
                     status=answer,
-                    categoria_status=''  # Adicione o valor apropriado aqui
+                    categoria_status=categoria_status  # Adicione o valor apropriado aqui
                 )
 
             return JsonResponse({'success': True})
@@ -60,6 +61,29 @@ def salvar_dados(request):
 
     return JsonResponse({'success': False, 'message': 'Método de requisição incorreto'})
 
+
+@csrf_exempt
+def salvar_report(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            props = data.get('props', [])
+
+            for item in props:
+                id_Groot = item[0]
+                status = item[1]
+                report = item[2]
+
+                ReportData.objects.create(
+                    id_Groot=id_Groot,
+                    status=status,
+                    description=report
+                )
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+        
+    return JsonResponse({'success': False, 'message': 'Método de requisição incorreto'})
 
 # from .views import SucessoView
 # class SucessoView(View):

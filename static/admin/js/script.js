@@ -92,15 +92,12 @@ async function callGenarate(){
         report.addEventListener('click', function(event){
             let row = event.target.closest('tr');
             let name = row.children[0].textContent;
-            let idGroot = parseFloat(row.children[1].textContent);
-            let status = row.children[3].textContent;
-            let props = [
-                name, idGroot, status
-            ]
-
+            var idGroot = parseFloat(row.children[1].textContent);
+            var status = row.children[3].textContent;
+            
             console.log(`${name} - ${idGroot} - ${status}`)
-
-
+            
+            
             const customPrompt = document.getElementById('customPrompt');
             const closeButton = document.querySelector('.close');
             const submitButton = document.getElementById('submitDescription');
@@ -112,29 +109,63 @@ async function callGenarate(){
             dataReport.innerHTML = `
             <p>${idGroot}</p> - <p>${name.slice(0, 20)}...</p> - <p>${status}</p>
             `
+
+            var props = []
+            console.log('props criado')
+            console.log(props)
             
             props = props.filter((r)=>{
-                return r[0] !== ''
+                return r[0] === ''
             });
+
+            console.log('props após filter')
+            console.log(props)
             
             console.log(`${props} - filter`)
             
             submitButton.addEventListener('click', function() {
                 let descriptionInput = document.getElementById('occurrenceDescription');
                 let description = descriptionInput.value;
-                props.push(description);
+                // props.push(description);
+                props = [
+                    [idGroot, status, description]
+                ]
+
+                console.log('valores atibuidos a props')
+                console.log(props)
                 // document.getElementById('occurrenceDescription').value = '';
                 
                 submitButton.innerHTML = `
                     <div class="rotate"></div>
                 `
+                const btnReport = document.getElementById('submitDescription')
+
+                fetch(btnReport.getAttribute('data-url'), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken'),
+                    },
+                    body: JSON.stringify({ props }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Sucesso:', data);
+                        btnReport.innerHTML = 'Confirmed!';
+                        console.log('ultimo props');
+                        console.log(props);
+                        // console.log('limpando props...');
+                        // props = [];
+                    })
+                    .catch((error) => {
+                        console.error('Erro:', error);
+                        btnReport.innerHTML = 'Error!';
+                    });
+
                 setTimeout(()=>{
                     submitButton.innerHTML = `
                         Enviar
                     `
-                    console.log(props);
-                    console.log('limpando props...');
-                    props = [];
 
                     console.log(props)
                     customPrompt.style.display = 'none';
@@ -211,6 +242,35 @@ function geraOptions(cargo, statusRow){
     return values;
 };
 
+function getCategory(value){
+    const categorys = {
+        'BH - Banco de Horas': 'Não gestionável',
+        'FI - Falta Injustificada': 'Gestionável',
+        'FJ - Abono Fretado': 'Não gestionável',
+        'FJ - Abono Gestor': 'Não gestionável',
+        'FJ - Abono Treinamento': 'Não gestionável',
+        'FJ - Acompanhamento Filho': 'Não gestionável',
+        'FJ - Atestado': 'Não gestionável',
+        'FJ - Audiência Judicial / Convocação': 'Não gestionável',
+        'FJ - Falecimento 1º grau': 'Não gestionável',
+        'FJ - Falecimento 2º grau': 'Não gestionável',
+        'FJ - Licença Casamento': 'Não gestionável',
+        'FJ - Licença Doação de Sangue': 'Não gestionável',
+        'FJ - Licença Eleitoral': 'Não gestionável',
+        'FJ - Licença Mudança': 'Não gestionável',
+        'FJ - Licença Paternidade': 'Não gestionável',
+        'FJ - Licença Vestibular': 'Não gestionável',
+        'FJ - Serviço Militar': 'Não gestionável',
+        'FR - Feriado': 'Não gestionável',
+        'HCD - HC Divergente': 'Gestionável',
+        'Presente': 'Não gestionável',
+        'SIE - Sinergia Externa': 'Não gestionável',
+        'JA - Dia de Curso': 'Não gestionável'
+    }
+
+    return categorys[value] || '';
+}
+
 
 function saveAnswers() {
 
@@ -224,8 +284,9 @@ function saveAnswers() {
         var name = row.querySelector('td:nth-child(1)').textContent;
         var idGroot = row.querySelector('td:nth-child(2)').textContent;
         var answer = row.querySelector('.justificativa').value;
+        var categoria_status = getCategory(answer);
         
-        dataAnswer.push([name, idGroot, answer]);
+        dataAnswer.push([name, idGroot, answer, categoria_status]);
 
         if(answer === 'pendente'){
             pending = true   
