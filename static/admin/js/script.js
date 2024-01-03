@@ -39,6 +39,7 @@ async function callGenarate(){
         return row[15] === leaderName
     })
 
+
     const props = data.map((row)=>{
         return [row[1], row[21], row[7], row[9], row[3]]
     })
@@ -71,7 +72,7 @@ async function callGenarate(){
         var cargo = row[4];
         var statusRow = row[3];
 
-        var optiondefault = await geraOptionsDefault(cargo, statusRow);
+        var optiondefault = await geraOptionsDefault(row[0], cargo, statusRow);
         justify.appendChild(optiondefault.value);
 
         var circle = document.createElement('div');
@@ -89,7 +90,7 @@ async function callGenarate(){
         `
         report.classList.add('reportProblem');
 
-        report.addEventListener('click', function(event){
+        report.addEventListener('click', async function(event){
             var row = event.target.closest('tr');
             var name = row.children[0].textContent;
             var idGroot = parseFloat(row.children[1].textContent);
@@ -133,75 +134,6 @@ async function callGenarate(){
     });
 };
 
-// quando estiver conectado com DB essa função deve buscar primeiro a base e verificar se já existe resposta
-// 
-// submitButton.addEventListener('click', function() {
-//     let descriptionInput = document.getElementById('occurrenceDescription');
-//     let description = descriptionInput.value;
-
-//     var props = []
-//     console.log('props criado')
-//     console.log(props)
-    
-//     props = props.filter((r)=>{
-//         return r[0] === ''
-//     });
-
-//     console.log('props após filter')
-//     console.log(props)
-    
-//     console.log(`${props} - filter`)
-//     // props.push(description);
-//     props = [
-//         [idGroot, status, description]
-//     ]
-
-//     console.log('valores atibuidos a props')
-//     console.log(props)
-//     // document.getElementById('occurrenceDescription').value = '';
-    
-//     submitButton.innerHTML = `
-//         <div class="rotate"></div>
-//     `
-//     const btnReport = document.getElementById('submitDescription')
-
-//     fetch(btnReport.getAttribute('data-url'), {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'X-CSRFToken': getCookie('csrftoken'),
-//         },
-//         body: JSON.stringify({ props }),
-//     })
-//         .then(response => response.json())
-//         .then(data => {
-//             console.log('Sucesso:', data);
-//             btnReport.innerHTML = 'Confirmed!';
-//             console.log('ultimo props');
-//             console.log(props);
-
-//             name = '';
-//             idGroot = '';
-//             status = '';
-//             document.getElementById('occurrenceDescription').value = '';
-//             // console.log('limpando props...');
-//             // props = [];
-//         })
-//         .catch((error) => {
-//             console.error('Erro:', error);
-//             btnReport.innerHTML = 'Error!';
-//         });
-
-//     setTimeout(()=>{
-//         submitButton.innerHTML = `
-//             Enviar
-//         `
-
-//         console.log(props)
-//         customPrompt.style.display = 'none';
-//     }, 5000);
-// });
-// 
 function getReport(){
     const dataReport = document.querySelector('.dataReport');
     let descriptionInput = document.getElementById('occurrenceDescription').value;
@@ -233,8 +165,6 @@ function getReport(){
             idGroot = '';
             status = '';
             document.getElementById('occurrenceDescription').value = '';
-            // console.log('limpando props...');
-            // props = [];
         })
         .catch((error) => {
             console.error('Erro:', error);
@@ -252,24 +182,19 @@ function getReport(){
 }
 
 
-function geraOptionsDefault(cargo, statusRow){
+async function geraOptionsDefault(name, cargo, statusRow){
     var option = document.createElement('option');
     option.selected = true;
     var colorName = 'red';
-    let answer = ''; // substituir por operação para buscar a resposta...
+    let answer = await getDadosFromBackend(name);
 
-    if(answer === '' && statusRow === 'ATIVO'){
-        option.textContent = 'pendente';
-    }else{
-        option.textContent = statusRow;      
-    }
+    (answer.length > 0) ? option.textContent = answer[0].status:
+    (answer.length < 1 && statusRow === 'ATIVO') ? option.textContent = 'pendente' :
+    (answer.length < 1 && statusRow === 'DSR - Escala') ? option.textContent = statusRow :
+    (answer.length < 1 && (statusRow !== 'DSR - Escala' && statusRow !== 'ATIVO')) ? option.textContent = statusRow : option.textContent = '';
 
-    (answer === '' && statusRow === 'ATIVO') ? option.textContent = 'pendente' :
-    (answer === '' && statusRow === 'DSR - Escala') ? option.textContent = statusRow :
-    (answer === '' && (statusRow !== 'DSR - Escala' && statusRow !== 'ATIVO')) ? option.textContent = statusRow : option.textContent = '';
-
-    (answer === '' && statusRow === 'DSR - Escala') ? colorName = '#3b8bed' :
-    (answer === '' && (statusRow !== 'DSR - Escala' && statusRow !== 'ATIVO')) ? colorName = '#c4b10b' : '#21c40b';
+    (answer.length < 1 && statusRow === 'DSR - Escala') ? colorName = '#3b8bed' :
+    (answer.length < 1 && (statusRow !== 'DSR - Escala' && statusRow !== 'ATIVO')) ? colorName = '#c4b10b' : '#21c40b';
 
     const props = {value: option, circleColor: colorName}
 
@@ -390,4 +315,26 @@ function getCookie(name) {
         }
     }
     return cookieValue;
+}
+
+
+async function getDadosFromBackend(nome){
+    try{
+        const today = new Date();
+        const formattedDate = `${today.getFullYear()}-${(today.getMonth()+1).toString().padStart(2,'0')}-${today.getDate().toString().padStart(2,'0')}`;
+        const formattedLaunchDate = formattedDate.split('T')[0];
+
+        const queryParamns = new URLSearchParams({
+            nome: nome,
+            lauch_date: formattedLaunchDate,  
+        })
+
+        const response = await fetch(`/get_dados/?${queryParamns}`);
+        const data = await response.json();
+
+        return data.dados
+
+    } catch (error) {
+        console.error('Erro ao obter dados', error);
+    }
 }

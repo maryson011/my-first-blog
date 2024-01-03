@@ -18,6 +18,30 @@ body{
     background-color: #cdcdcd;
 }
 
+.homeStyle{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    background-color: #cdcdcd;
+}
+
+.homeStyle{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.homeStyle h1{
+    width: 70%;
+    margin-inline: center;
+
+    text-align: center;
+
+    background-color: #fff;
+}
+
 .callSection{
     display: flex;
     justify-content: center;

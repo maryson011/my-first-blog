@@ -6,30 +6,13 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 import json
 
+class homePage(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, 'homePage.html')
 
 class MainView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'main.html')
-
-
-# @require_POST
-# @csrf_exempt
-
-# def salvar_dados(request):
-#     if request.method == 'POST':
-#         data = json.loads(request.body)
-#         nome = data.get('nome')
-#         id_groot = data.get('id_groot')
-#         status = data.get('status')
-#         categorias_status = data.get('categoria_status')
-
-#         Dados.objects_create(nome=nome,  id_groot=id_groot, status=status, categorias_status=categorias_status)
-
-#         return JsonResponse({'mensage': 'Dados salvos com sucesso!'})
-#     else:
-#         return JsonResponse({'mensage': 'Método não permitido'}, status=405)
-
-# views.py
 
 from django.shortcuts import render, redirect
 from .models import Dados
@@ -90,3 +73,36 @@ def salvar_report(request):
 # class SucessoView(View):
 #     def get(self, request, *args, **kwargs):
 #         return render(request, 'sucesso.html')
+
+from datetime import datetime
+
+@csrf_exempt
+def get_dados(request):
+    if request.method == 'GET':
+        nome_filtro = request.GET.get('nome', None)
+        status_filtro = request.GET.get('status', None)
+        lauch_date_filtro = request.GET.get('lauch_date', None)
+
+        filtros = {}
+
+        if nome_filtro:
+            filtros['nome__icontains'] = nome_filtro
+
+        if status_filtro:
+            filtros['status'] = status_filtro
+
+        if lauch_date_filtro:
+            try:
+                lauch_date = datetime.strptime(lauch_date_filtro, '%Y-%m-%d')
+
+                filtros['lauch_date__date'] = lauch_date.date()
+
+            except:
+                return JsonResponse({'error': 'Formato de data invalido'}, status=400)
+
+
+        dados = Dados.objects.filter(**filtros).values()
+
+        return JsonResponse({'dados': list(dados)})
+    else:
+        return JsonResponse({'error': 'Metodo de requisição incorreto'}, status=405)
