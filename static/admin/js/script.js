@@ -251,23 +251,43 @@ function getCategory(value){
     return categorys[value] || '';
 }
 
+function validationName(){
+    const rs = document.querySelectorAll('#data-table tbody tr');
+    let arr = [];
+    var flag;
+    rs.forEach((r)=>{
+        let name = r.querySelector('td:nth-child(1)').textContent;
 
-function saveAnswers() {
+        let namesInDB = getDadosFromBackend(name)
+
+        console.log('namesInDB')
+        console.log(namesInDB)
+
+        if(namesInDB.length > 0){ arr.push([namesInDB]) }
+    })
+
+    (arr.length > 0) ? flag = 1 : flag = 0;
+
+    return flag
+}
+
+async function saveAnswers() {
 
     console.log('saved!')
     const btn = document.getElementById('btnSave')
     let dataAnswer = [];
     var pending = false;
+    let arr = [];
 
     const rows = document.querySelectorAll('#data-table tbody tr');
-    rows.forEach((row)=>{
+    rows.forEach(async (row)=>{
         var name = row.querySelector('td:nth-child(1)').textContent;
         var idGroot = row.querySelector('td:nth-child(2)').textContent;
         var answer = row.querySelector('.justificativa').value;
         var categoria_status = getCategory(answer);
         
         dataAnswer.push([name, idGroot, answer, categoria_status]);
-
+        
         if(answer === 'pendente'){
             pending = true   
         };
@@ -280,23 +300,32 @@ function saveAnswers() {
 
     btn.innerHTML = `<div class="rotate"></div>`;
 
-    fetch(btn.getAttribute('data-url'), {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': getCookie('csrftoken'),
-        },
-        body: JSON.stringify({ dataAnswer }),
-    })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Sucesso:', data);
-            btn.innerHTML = 'Confirmed!';
-        })
-        .catch((error) => {
-            console.error('Erro:', error);
+    try{
+        const existingData = await getDadosFromBackend(dataAnswer[0][0]);
+
+        if (existingData.length > 0) {
+            alert('Os dados já existem no banco para o nome fornecido.');
             btn.innerHTML = 'Error!';
-        });
+            return;
+        }   
+    
+        fetch(btn.getAttribute('data-url'), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({ dataAnswer }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Sucesso:', data);
+                btn.innerHTML = 'Confirmed!';
+            })
+    } catch (error) {
+        console.error('Erro:', error);
+        btn.innerHTML = 'Error!';
+    };
 
 }
 

@@ -35,7 +35,7 @@ def salvar_dados(request):
                     nome=nome,
                     id_groot=id_groot,
                     status=answer,
-                    categoria_status=categoria_status  # Adicione o valor apropriado aqui
+                    categoria_status=categoria_status
                 )
 
             return JsonResponse({'success': True})
