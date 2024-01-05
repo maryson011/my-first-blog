@@ -65,6 +65,7 @@ async function callGenarate(){
 
         var justify = document.createElement('select');
         justify.className = 'justificativa';
+        justify.onchange = updateAnswerInDB;
         var statusContainer = document.createElement('div');
         statusContainer.classList.add('status-container');
         statusContainer.style.display = 'flex';
@@ -74,6 +75,7 @@ async function callGenarate(){
 
         var optiondefault = await geraOptionsDefault(row[0], cargo, statusRow);
         justify.appendChild(optiondefault.value);
+        justify.id = optiondefault.id;
 
         var circle = document.createElement('div');
         circle.classList.add('status-circle');
@@ -134,6 +136,26 @@ async function callGenarate(){
     });
 };
 
+function updateAnswerInDB(event){
+    let id = event.target.id;
+    let value = event.target.value;
+
+    fetch(`/update_status/?id=${id}&status=${value}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Sucesso ao atualizar o status no banco:', data);
+        })
+        .catch(error => {
+            console.error('Erro ao atualizar o status no banco:', error);
+        });
+};
+
 function getReport(){
     const dataReport = document.querySelector('.dataReport');
     let descriptionInput = document.getElementById('occurrenceDescription').value;
@@ -187,6 +209,7 @@ async function geraOptionsDefault(name, cargo, statusRow){
     option.selected = true;
     var colorName = 'red';
     let answer = await getDadosFromBackend(name);
+    var id;
 
     (answer.length > 0) ? option.textContent = answer[0].status:
     (answer.length < 1 && statusRow === 'ATIVO') ? option.textContent = 'pendente' :
@@ -196,7 +219,9 @@ async function geraOptionsDefault(name, cargo, statusRow){
     (answer.length < 1 && statusRow === 'DSR - Escala') ? colorName = '#3b8bed' :
     (answer.length < 1 && (statusRow !== 'DSR - Escala' && statusRow !== 'ATIVO')) ? colorName = '#c4b10b' : '#21c40b';
 
-    const props = {value: option, circleColor: colorName}
+    (answer.length > 0) ? id = answer[0].id: id = 0
+
+    const props = {value: option, circleColor: colorName, id: id}
 
     return props
 }
@@ -251,25 +276,13 @@ function getCategory(value){
     return categorys[value] || '';
 }
 
-function validationName(){
-    const rs = document.querySelectorAll('#data-table tbody tr');
-    let arr = [];
-    var flag;
-    rs.forEach((r)=>{
-        let name = r.querySelector('td:nth-child(1)').textContent;
+const closeButtonAlert = document.getElementById('close');
 
-        let namesInDB = getDadosFromBackend(name)
+closeButtonAlert.addEventListener('click', function() {
+    const alertPrompt = document.getElementById('alertPrompt');
+    alertPrompt.style.display = 'none';
+});
 
-        console.log('namesInDB')
-        console.log(namesInDB)
-
-        if(namesInDB.length > 0){ arr.push([namesInDB]) }
-    })
-
-    (arr.length > 0) ? flag = 1 : flag = 0;
-
-    return flag
-}
 
 async function saveAnswers() {
 
@@ -304,7 +317,16 @@ async function saveAnswers() {
         const existingData = await getDadosFromBackend(dataAnswer[0][0]);
 
         if (existingData.length > 0) {
-            alert('Os dados já existem no banco para o nome fornecido.');
+            document.getElementById('alertPrompt').style.display = 'block';
+
+            document.querySelector('.dataMensage').style.display = 'flex';
+            document.querySelector('.dataMensage').style.flexDirection = 'column';
+            document.querySelector('.dataMensage').style.justifyContent = 'center';
+            
+            document.querySelector('.dataMensage').innerHTML = `
+                <h5 class="alert-text">Você já realizou o reporte da chamada hoje.</h5>
+                <p class="instruction-text">Caso queira corrigir algum status, altere apenas no nome que precisa.</p>
+            `
             btn.innerHTML = 'Error!';
             return;
         }   

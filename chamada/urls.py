@@ -9,6 +9,7 @@ from blog.views import MainView
 from blog.views import salvar_dados
 from blog.views import salvar_report
 from blog.views import get_dados
+from blog.views import update_status
 
 
 urlpatterns = [
@@ -18,6 +19,7 @@ urlpatterns = [
     path('salvar_dados/', salvar_dados, name='salvar_dados'),
     path('salvar_report/', salvar_report, name='salvar_report'),
     path('get_dados/', get_dados, name='get_dados'),
+    path('update_status/', update_status, name='update_status')
     # path('sucesso/', SucessoView.as_view(), name='sucesso'),
 ]
 

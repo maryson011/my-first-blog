@@ -176,37 +176,61 @@ ul{
     height: 100%;
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.5);
+
+    align-items: center;
 }
 
 .modal-content {
-    background-color: #fefefe;
+    background-color: #cecccc;
     margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
     height: 15rem;
-    margin-top: 20%;
+    /* margin-top: 15%; */
 
     display: flex;
     flex-direction: column;
 }
+.alert-content {
+  background-color: #fff;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  height: 15rem;
+  /* margin-top: 15%; */
+
+  display: flex;
+  flex-direction: column;
+}
 
 .close {
-    color: #aaa;
+    width: 30px;
+    height: 30px;
+
+    color: #fff;
     float: right;
     font-size: 28px;
     font-weight: bold;
 
     margin-left: 95%;
+
+    border-radius: 50%;
+    background-color: #242424;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .close:hover,
 .close:focus {
-    color: black;
+    color: rgb(222, 222, 222);
     text-decoration: none;
     cursor: pointer;
 }
-.dataReport{
+.dataReport, .dataMensage{
     width: 80%;
     margin: 1.5rem auto -1rem;
     padding: 20px;
@@ -225,3 +249,16 @@ ul{
     margin-top: .5rem;
 }
 
+.alert-text{
+  font-size: 20px;
+  color: #242424;
+  margin-top: .2rem;
+
+  text-align: center;
+}
+
+.instruction-text{
+  font-size: 13px;
+  color: #242424;
+  margin: .5rem auto;
+}

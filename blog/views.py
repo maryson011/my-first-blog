@@ -106,3 +106,22 @@ def get_dados(request):
         return JsonResponse({'dados': list(dados)})
     else:
         return JsonResponse({'error': 'Metodo de requisição incorreto'}, status=405)
+
+   
+from django.utils import timezone
+    
+@csrf_exempt
+def update_status(request):
+    if request.method == 'PUT':
+        try:
+            id = request.GET.get('id')
+            status = request.GET.get('status')
+
+            Dados.objects.filter(id=id).update(status=status, lauch_date=timezone.now())
+
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+        
+    return JsonResponse({'error': 'Método de requisição incorreto'}, status=405)
+
