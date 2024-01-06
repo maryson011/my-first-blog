@@ -18,6 +18,11 @@ body{
     background-color: #cdcdcd;
 }
 
+select option:checked {
+    background-color: #fff;
+    color: #303030;
+}
+
 .homeStyle{
     display: flex;
     flex-direction: column;

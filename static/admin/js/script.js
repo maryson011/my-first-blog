@@ -77,6 +77,11 @@ async function callGenarate(){
         justify.appendChild(optiondefault.value);
         justify.id = optiondefault.id;
 
+        if(optiondefault.bacgroundName === 1){justify.style.backgroundColor = 'red'}
+
+        const layOutJustify = justify.style
+        layOutJustify.textAlign = 'center';
+
         var circle = document.createElement('div');
         circle.classList.add('status-circle');
         circle.style.backgroundColor = optiondefault.circleColor;
@@ -208,20 +213,24 @@ async function geraOptionsDefault(name, cargo, statusRow){
     var option = document.createElement('option');
     option.selected = true;
     var colorName = 'red';
+    var bacgroundName;
     let answer = await getDadosFromBackend(name);
     var id;
 
     (answer.length > 0) ? option.textContent = answer[0].status:
-    (answer.length < 1 && statusRow === 'ATIVO') ? option.textContent = 'pendente' :
-    (answer.length < 1 && statusRow === 'DSR - Escala') ? option.textContent = statusRow :
-    (answer.length < 1 && (statusRow !== 'DSR - Escala' && statusRow !== 'ATIVO')) ? option.textContent = statusRow : option.textContent = '';
+    (answer.length === 0 && statusRow === 'ATIVO') ? option.textContent = 'FJ - Falta Injustificada' :
+    (answer.length === 0 && statusRow === 'DSR - Escala') ? option.textContent = statusRow :
+    (answer.length === 0 && (statusRow !== 'DSR - Escala' && statusRow !== 'ATIVO')) ? option.textContent = statusRow : option.textContent = '';
 
-    (answer.length < 1 && statusRow === 'DSR - Escala') ? colorName = '#3b8bed' :
-    (answer.length < 1 && (statusRow !== 'DSR - Escala' && statusRow !== 'ATIVO')) ? colorName = '#c4b10b' : '#21c40b';
+    (answer.length === 0 && statusRow === 'DSR - Escala') ? colorName = '#3b8bed' :
+    (answer.length === 0 && (statusRow !== 'DSR - Escala' && statusRow !== 'ATIVO')) ? colorName = '#c4b10b' : '#21c40b';
 
     (answer.length > 0) ? id = answer[0].id: id = 0
 
-    const props = {value: option, circleColor: colorName, id: id}
+    bacgroundName = (option.textContent === 'FJ - Falta Injustificada') ? 1 : 0
+
+
+    const props = {value: option, circleColor: colorName, id: id, bacgroundName: bacgroundName}
 
     return props
 }
