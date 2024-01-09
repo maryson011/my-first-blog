@@ -1,0 +1,29 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'admin/css/style.css' %}">
+    <title>Document</title>
+</head>
+<body>
+    <form method="post">
+        <h1>Cadastro</h1>
+        <label class="label-form">Nome completo
+            <input type="text" id="fullname" placeholder="username"/>
+        </label>
+        <label class="label-form">E-mail
+            <input type="email" id="email" placeholder="username"/>
+        </label>
+        <label class="label-form">Password
+            <input type="password" id="password" placeholder="password"/>
+        </label>
+        <label class="label-form">Password confirme
+            <input type="password" id="password-confirme" placeholder="password confirme"/>
+        </label>
+        <button type="submit" name="btn-sub" id="btn-login">Cadastrar</button>
+    </form>
+</body>
+</html>

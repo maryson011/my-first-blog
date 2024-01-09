@@ -13,6 +13,10 @@ class homePage(View):
 class MainView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'main.html')
+    
+class Cadastro(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, 'cadastro.html')
 
 from django.shortcuts import render, redirect
 from .models import Dados
@@ -107,7 +111,7 @@ def get_dados(request):
     else:
         return JsonResponse({'error': 'Metodo de requisição incorreto'}, status=405)
 
-   
+
 from django.utils import timezone
     
 @csrf_exempt
