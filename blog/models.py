@@ -32,3 +32,14 @@ class ReportData(models.Model):
     status = models.CharField(max_length=100)
     description = models.CharField(max_length=500)
     lauch_date = models.DateTimeField(default=timezone.now, editable=False)
+
+class CadastroUser(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    password = models.CharField(max_length=30)
+    lauch_date = models.DateTimeField(default=timezone.now, editable=False)
+
+class loginUser(models.Model):
+    username = models.CharField(max_length=100)
+    log = models.BooleanField(default=False, editable=True)
+    lauch_date = models.DateTimeField(default=timezone.now, editable=True)
