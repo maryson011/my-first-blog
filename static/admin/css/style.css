@@ -42,7 +42,12 @@ form{
 form h1{
     width: 70%;
     text-align: center;
+}
 
+form h1{
+    margin-inline: auto;
+}
+form .title-form h1{
     margin-right: 20%;
 }
 
